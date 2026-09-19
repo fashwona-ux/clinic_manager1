@@ -1,0 +1,10 @@
+{
+  "name": "Dental Clinic Manager",
+  "short_name": "Dental Clinic",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#0f766e",
+  "lang": "ar",
+  "dir": "rtl"
+}

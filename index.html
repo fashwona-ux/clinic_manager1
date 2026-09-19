@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f766e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<title>Dental Clinic</title>
+<style>
+:root{--p:#0f766e;--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#708096;--line:#e5ebf1}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif}
+body{padding-bottom:78px}.app{max-width:720px;margin:auto;padding:14px}
+header{position:sticky;top:0;z-index:5;background:#ffffffee;backdrop-filter:blur(10px);padding:10px 2px 12px;display:flex;justify-content:space-between;align-items:center}
+h1{font-size:22px;margin:8px 0}.sub{color:var(--muted);font-size:13px}
+button,input,select,textarea{font:inherit}button{border:0;border-radius:12px;padding:11px 14px;background:#e9eef4;color:var(--text);min-height:44px}.primary{background:var(--p);color:#fff}
+.hidden{display:none!important}.grid{display:grid;gap:12px}.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}.card,.panel{background:var(--card);border-radius:16px;padding:15px;box-shadow:0 3px 16px #1720330c}.num{font-size:23px;font-weight:800;margin-top:5px}.label{font-size:12px;color:var(--muted)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:0}
+.search,.field input,.field select,.field textarea{width:100%;border:1px solid #d7e0e8;background:#fff;border-radius:11px;padding:12px;outline:none}.search{margin:5px 0 12px}
+.field{display:grid;gap:6px}.field label{font-size:13px;color:var(--muted)}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.patient{background:#fff;border-radius:14px;padding:14px;margin:8px 0;box-shadow:0 2px 10px #1720330b}.patient:active{transform:scale(.99)}
+.bottom{position:fixed;bottom:0;left:0;right:0;height:70px;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);z-index:10;max-width:720px;margin:auto}.bottom button{background:transparent;border-radius:0;font-size:11px;padding:5px 2px}.bottom button.active{color:var(--p);font-weight:800}
+.arch{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0}.tooth{width:38px;height:42px;border:1px solid #ccd7e2;border-radius:9px;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:12px}.tooth.sel{background:#d9f3ee;border:2px solid var(--p)}
+.modal{position:fixed;inset:0;background:#0008;z-index:30;display:flex;align-items:flex-end}.sheet{background:#fff;width:100%;max-width:720px;margin:auto;border-radius:20px 20px 0 0;padding:18px;max-height:88vh;overflow:auto}.actions{display:flex;gap:8px;margin-top:14px}.actions button{flex:1}
+.badge{background:#e6f5f2;color:#086b5d;padding:5px 8px;border-radius:20px;font-size:11px}.danger{background:#dc3545;color:#fff}
+@media(max-width:430px){.formgrid{grid-template-columns:1fr}.cards .card{padding:13px}.tooth{width:35px;height:40px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div><h1 id="title">🦷 Dental Clinic</h1><div class="sub" id="doctor"></div></div><button class="primary" id="quickAdd">+ مريض</button></header>
+
+<section id="dashboard"><div class="cards"><div class="card"><div class="label">المرضى</div><div class="num" id="dPatients">0</div></div><div class="card"><div class="label">مواعيد اليوم</div><div class="num" id="dAppointments">0</div></div><div class="card"><div class="label">المدفوع</div><div class="num" id="dRevenue">0</div></div><div class="card"><div class="label">المتبقي</div><div class="num" id="dRemaining">0</div></div></div><div class="panel" style="margin-top:12px"><b>مواعيد اليوم</b><div id="today"></div></div></section>
+
+<section id="patients" class="hidden"><header><h1>المرضى</h1><button class="primary" id="addPatient">+ مريض</button></header><input class="search" id="search" placeholder="🔎 بحث بالاسم أو الهاتف"><div id="patientList"></div></section>
+
+<section id="profile" class="hidden">
+<header><button id="back">← رجوع</button><h1 id="pName"></h1><button id="print">🖨️</button></header>
+<div class="panel"><div class="formgrid"><div class="field"><label>الهاتف</label><input id="phone"></div><div class="field"><label>العمر</label><input id="age"></div><div class="field"><label>الحساسية</label><input id="allergy"></div><div class="field"><label>Medical History</label><input id="medical"></div></div><button class="primary" id="saveProfile" style="width:100%;margin-top:10px">حفظ بيانات المريض</button></div>
+<div class="panel" style="margin-top:12px"><b>🦷 Odontogram</b><div id="upper" class="arch"></div><div id="lower" class="arch"></div><div id="toothBox" class="hidden"><hr><h3 id="toothTitle"></h3><div class="formgrid"><div class="field"><label>Surface</label><select id="surface"><option>All</option><option>O</option><option>M</option><option>D</option><option>B</option><option>L</option><option>F</option></select></div><div class="field"><label>Status</label><select id="status"><option>Planned</option><option>In Progress</option><option>Done</option></select></div><div class="field"><label>Diagnosis</label><input id="diag"></div><div class="field"><label>Treatment</label><input id="treat"></div><div class="field"><label>Price</label><input id="price" type="number"></div></div><button class="primary" id="saveTooth" style="width:100%;margin-top:10px">حفظ علاج السن</button></div></div>
+<div class="panel" style="margin-top:12px"><b>📋 Treatment Plan</b><div id="plan"></div><div class="row"><b>الإجمالي</b><b id="total">0 ج.م</b></div><div class="row"><span>المدفوع</span><b id="paid">0 ج.م</b></div><div class="row"><span>المتبقي</span><b id="remain">0 ج.م</b></div><button class="primary" id="payment" style="width:100%">+ تسجيل دفعة</button></div>
+<div class="panel" style="margin-top:12px"><b>📝 الزيارات</b><div id="visits"></div><button id="visit" style="width:100%">+ زيارة</button></div>
+</section>
+
+<section id="calendar" class="hidden"><header><button id="prev">‹</button><h1 id="calTitle"></h1><button id="next">›</button></header><button class="primary" id="appointment" style="width:100%">+ موعد جديد</button><div class="panel" style="margin-top:12px" id="calList"></div></section>
+<section id="finance" class="hidden"><header><h1>💰 الحسابات</h1><button class="primary" id="expense">+ مصروف</button></header><div class="cards"><div class="card"><div class="label">المدفوع</div><div class="num" id="fRev">0</div></div><div class="card"><div class="label">المصروف</div><div class="num" id="fExp">0</div></div><div class="card"><div class="label">الصافي</div><div class="num" id="fNet">0</div></div><div class="card"><div class="label">Card</div><div class="num" id="fCard">0</div></div></div><div class="panel" style="margin-top:12px"><b>الحركات</b><div id="transactions"></div></div></section>
+<section id="settings" class="hidden"><header><h1>⚙️ الإعدادات</h1></header><div class="panel"><div class="grid"><div class="field"><label>اسم العيادة</label><input id="clinic" value="Dental Clinic"></div><div class="field"><label>اسم الطبيب</label><input id="doc" value="د. أحمد"></div><button class="primary" id="saveSettings">حفظ</button><button id="backup">💾 Backup</button><input type="file" id="restore" accept=".json"></div></div></section>
+
+<nav class="bottom"><button class="active" data-go="dashboard">🏠<br>الرئيسية</button><button data-go="patients">👥<br>المرضى</button><button data-go="calendar">📅<br>المواعيد</button><button data-go="finance">💰<br>الحسابات</button><button data-go="settings">⚙️<br>إعدادات</button></nav>
+</div>
+
+<div class="modal hidden" id="patientModal"><div class="sheet"><h2>إضافة مريض</h2><div class="formgrid"><div class="field"><label>الاسم *</label><input id="newName"></div><div class="field"><label>الهاتف</label><input id="newPhone"></div><div class="field"><label>العمر</label><input id="newAge"></div><div class="field"><label>الحساسية</label><input id="newAllergy"></div></div><div class="actions"><button class="primary" id="savePatient">حفظ</button><button id="closePatient">إغلاق</button></div></div></div>
+<div class="modal hidden" id="paymentModal"><div class="sheet"><h2>تسجيل دفعة</h2><div class="formgrid"><div class="field"><label>المبلغ</label><input id="payAmount" type="number"></div><div class="field"><label>طريقة الدفع</label><select id="payMethod"><option>Cash</option><option>Card</option><option>InstaPay</option></select></div></div><div class="actions"><button class="primary" id="savePay">حفظ</button><button id="closePay">إغلاق</button></div></div></div>
+<div class="modal hidden" id="visitModal"><div class="sheet"><h2>زيارة جديدة</h2><div class="formgrid"><div class="field"><label>Diagnosis</label><input id="vDiag"></div><div class="field"><label>Treatment Done</label><input id="vTreat"></div></div><div class="actions"><button class="primary" id="saveVisit">حفظ</button><button id="closeVisit">إغلاق</button></div></div></div>
+<div class="modal hidden" id="apptModal"><div class="sheet"><h2>موعد جديد</h2><div class="grid"><div class="field"><label>المريض</label><select id="aPatient"></select></div><div class="field"><label>التاريخ</label><input id="aDate" type="date"></div><div class="field"><label>الوقت</label><input id="aTime" type="time"></div><div class="field"><label>الإجراء</label><input id="aProcedure"></div><div class="field"><label>الحالة</label><select id="aStatus"><option>Confirmed</option><option>Waiting</option><option>Completed</option><option>Cancelled</option><option>No Show</option></select></div></div><div class="actions"><button class="primary" id="saveAppt">حفظ</button><button id="closeAppt">إغلاق</button></div></div></div>
+<div class="modal hidden" id="expenseModal"><div class="sheet"><h2>إضافة مصروف</h2><div class="formgrid"><div class="field"><label>البند</label><input id="eName"></div><div class="field"><label>المبلغ</label><input id="eAmount" type="number"></div></div><div class="actions"><button class="primary" id="saveExp">حفظ</button><button id="closeExp">إغلاق</button></div></div></div>
+<script src="app.js"></script><script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});</script>
+</body></html>
